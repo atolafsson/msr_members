@@ -1,16 +1,16 @@
 {
     "dev" : {
-        "DBConnection" : "./sqlite3msr.db",
+        "DBConnection" : "/Users/user/work/go/src/msr_members/sqlite3msr.db",
         "Port" : "8084",
         "SessionTimeout" : 4
     },
     "test" : {
-        "DBConnection" : "./sqlite3msr.db",
+        "DBConnection" : "/Users/user/work/go/src/msr_members/sqlite3msr.db",
         "Port" : "8083",
         "SessionTimeout" : 4
     },
     "prod" : {
-        "DBConnection" : "./sqlite3msr.db",
+        "DBConnection" : "/Users/user/work/go/src/msr_members/sqlite3msr.db",
         "Port" : "8084",
         "SessionTimeout" : 4
     }
