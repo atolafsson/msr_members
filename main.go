@@ -1,6 +1,7 @@
 package main
 
 import (
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -8,6 +9,9 @@ import (
 
 	"github.com/creamdog/gonfig"
 )
+
+// TMPLAll -- for all html templates
+var TMPLAll *template.Template
 
 // DBConnection -- The database connection
 var DBConnection string
@@ -34,12 +38,20 @@ func main() {
 			if err != nil {
 				panic(err)
 			}
-			DBConnection, _ = config.GetString(cEnv+"/DBConnection", "sqlite3msr.db")
+			//DBConnection, _ = config.GetString(cEnv+"/DBConnection", "sqlite3msr.db")
+			DBConnection = "/Users/user/work/go/src/msr_members/sqlite3msr.db"
 			port, _ := config.GetString(cEnv+"/Port", "8084")
 			port = ":" + port
 			SessionTimeout, _ = config.GetInt(cEnv+"/SessionTimeout", 16)
 			log.Printf("Port=%s, SessionTimeout=%d, DB=%s\n", port, SessionTimeout, DBConnection)
 			router := NewRouter()
+			var terr error
+			TMPLAll, terr = template.New("ed_head.html").ParseFiles("ed_head.html")
+			if terr == nil {
+				TMPLAll.New("ed_title.html").ParseFiles("ed_title.html")
+				TMPLAll.New("edMember.html").ParseFiles("edMember.html")
+			}
+
 			log.Println("Starting, listening to port " + port)
 			log.Fatal(http.ListenAndServe(port, router))
 

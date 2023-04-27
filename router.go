@@ -48,7 +48,25 @@ var routes = Routes{
 	{
 		"Members",
 		"GET",
-		"/",
+		"/members",
 		Members,
+	},
+	{
+		"MembersS",
+		"GET",
+		"/memberss",
+		MembersS,
+	},
+	Route{
+		"EditMember",
+		"GET",
+		"/editmember/{memberId}",
+		EditMember,
+	},
+	Route{
+		"SaveMember",
+		"POST",
+		"/savemember/{memberId}",
+		SaveMember,
 	},
 }
