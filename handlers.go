@@ -13,6 +13,11 @@ var styles = `<link rel='stylesheet' type='text/css' href='/static/index.css'>`
 
 var MenuHdr = `
 <div class="dropdown" style='margin-top: 14px;margin-left: 12px;'>
+  <button class="dropbtn"><img src="/static/Notebook.jpg" style="height:32px;">&nbsp;&nbsp;Menu...</button>
+  <div class="dropdown-content">
+  <a href="/">Home</a>
+  <a href="/members">Members</a>
+  </div>
   <b style='vertical-align: bottom;font-size:30px;color: #B9290A;text-shadow: 2px 2px 5px red;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%s</b>
 </div>
 <br><p></p>`
@@ -64,7 +69,7 @@ func PrintFilterHeader(w http.ResponseWriter, header string, tableSort string, u
 	w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 	scr := fmt.Sprintf(scriptsFilter, "")
-	fmt.Fprintf(w, "<html><head>%s</head><body>", scr)
+	fmt.Fprintf(w, "<html><head>%s</head><body>", styles+scr)
 	fmt.Fprintf(w, MenuHdr, header)
 	tSort := ""
 	if len(tableSort) > 1 {
@@ -84,11 +89,15 @@ func PrintUIHeader(w http.ResponseWriter, header string) {
 
 func Index(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, `<html><body><center><h1><b style='font-size:40px;color: #B9290A;text-shadow: 2px 2px 5px red;'>
-	Welcome to the MSR Members directory</b></h1></center></body></html>`)
+	Welcome to the MSR Members directory</b></h1></body></html>`)
+	fmt.Fprint(w, `<p><img src="/static/Notebook.jpg" alt="MSR Members" style="height:240px;">`)
+	fmt.Fprint(w, "<p><a href='/members'>Manage Members</a></p>")
 }
 
 func Members(w http.ResponseWriter, r *http.Request) {
-	PrintFilterHeader(w, "MSR Current Members", "[[0,0]]", false)
+	PrintFilterHeader(w, "MSR Current Members", "[[1,0]]", false)
+	fmt.Fprintf(w, "&nbsp;&nbsp;&nbsp;&nbsp;")
+	fmt.Fprintf(w, "Click here to <a href='/editmember/0'>Add new Member</a></center></div>")
 	fmt.Fprintf(w, "<thead><tr><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>",
 		"ID", "Name", "NickName", "Email", "Address", "City", "Zip Code")
 	memb := GetMembers()
@@ -117,8 +126,9 @@ func MembersS(w http.ResponseWriter, r *http.Request) {
 func EditMember(w http.ResponseWriter, r *http.Request) {
 	var mb Member
 	vars := mux.Vars(r)
-	fmt.Printf("EditCust, %v\n", r.Form)
+	fmt.Printf("EditMember, %v\n", r.Form)
 	memberID, _ := strconv.Atoi(vars["memberId"])
+	fmt.Printf("Member.ID, %d\n", memberID)
 	if memberID > 0 {
 		mb = GetMember(memberID)
 		fmt.Printf("Edit Member, ID=%d, Name=%s\n", memberID, mb.name)
