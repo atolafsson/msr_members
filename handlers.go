@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"strconv"
@@ -103,7 +104,7 @@ func Members(w http.ResponseWriter, r *http.Request) {
 	memb := GetMembers()
 	for _, o := range memb {
 		fmt.Fprintf(w, "<tr><td>%d</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%d</td></tr>",
-			o.id, o.name, o.nickName, o.email, o.address, o.city, o.zip)
+			o.ID, o.Name, o.NickName, o.Email, o.Address, o.City, o.Zip)
 	}
 	fmt.Fprint(w, "</center></body></html>")
 
@@ -131,15 +132,21 @@ func EditMember(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Member.ID, %d\n", memberID)
 	if memberID > 0 {
 		mb = GetMember(memberID)
-		fmt.Printf("Edit Member, ID=%d, Name=%s\n", memberID, mb.name)
+		fmt.Printf("Edit Member, ID=%d, Name=%s\n", memberID, mb.Name)
 	} else {
 		fmt.Println("Add Member")
-		mb.id = 0
-		mb.name = "New"
+		mb.ID = 0
+		mb.Name = "New"
+		mb.Address = "test"
+		mb.Email = "test@test"
+		mb.NickName = ""
+		mb.Prospect = 0
+		mb.Zip = 0
 	}
-	//tmpl := template.Must(template.ParseFiles("edCustomer.html"))
-	//TMPLCus.Execute(w, cust)
-	TMPLAll.ExecuteTemplate(w, "edMember.html", mb)
+	tmpl := template.Must(template.ParseFiles("edMember.html"))
+	fmt.Printf("Execute Template for %s\n", mb.Name)
+	tmpl.Execute(w, mb)
+	//TMPLAll.ExecuteTemplate(w, "edMember.html", mb)
 }
 
 // SaveMember -- Save Member
@@ -150,21 +157,21 @@ func SaveMember(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Saving Member, ID=%d, Name=%s\n", mID, r.FormValue("iName"))
 	//log.Println(r.Form)
 	var m Member
-	m.id = mID
-	m.name = r.FormValue("iName")
-	m.nickName = r.FormValue("iNickName")
-	m.address = r.FormValue("iAdress")
-	m.zip, _ = strconv.Atoi(r.FormValue("iZip"))
-	m.city = r.FormValue("iCity")
-	m.email = r.FormValue("iEmail")
-	m.notes = r.FormValue("iNotes")
+	m.ID = mID
+	m.Name = r.FormValue("iName")
+	m.NickName = r.FormValue("iNickName")
+	m.Address = r.FormValue("iAdress")
+	m.Zip, _ = strconv.Atoi(r.FormValue("iZip"))
+	m.City = r.FormValue("iCity")
+	m.Email = r.FormValue("iEmail")
+	m.Notes = r.FormValue("iNotes")
 	id := UpdMember(m)
 	if mID == 0 {
 		PrintUIHeader(w, "Saving Member")
 		fmt.Fprintf(w, "<p>New Member saved, Name=%s --  Go to <a href='/members'>Search</a>.</p>",
-			m.name)
+			m.Name)
 	} else {
-		log.Printf("Data saved for the Customer, ID=%d, Name=%s", id, m.name)
+		log.Printf("Data saved for the Member, ID=%d, Name=%s", id, m.Name)
 		http.Redirect(w, r, "/members", http.StatusFound)
 	}
 }

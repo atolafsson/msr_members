@@ -1,15 +1,15 @@
 package main
 
 type Member struct {
-	id       int
-	name     string
-	email    string
-	nickName string
-	prospect int
-	address  string
-	zip      int
-	city     string
-	notes    string
+	ID       int
+	Name     string
+	Email    string
+	NickName string
+	Prospect int
+	Address  string
+	Zip      int
+	City     string
+	Notes    string
 }
 
 type MemberList []Member

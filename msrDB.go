@@ -43,7 +43,7 @@ func GetMember(mid int) Member {
 		DB = OpenDB()
 	}
 	row := DB.QueryRow(sqlGetMember, mid)
-	err := row.Scan(&r.id, &r.name, &r.email, &r.nickName, &r.prospect, &r.address, &r.zip, &r.city, &r.notes)
+	err := row.Scan(&r.ID, &r.Name, &r.Email, &r.NickName, &r.Prospect, &r.Address, &r.Zip, &r.City, &r.Notes)
 	checkErr(err)
 	return r
 }
@@ -62,7 +62,7 @@ func GetMembers() MemberList {
 	log.Println("populate the data")
 	for rows.Next() {
 		var r Member
-		err = rows.Scan(&r.id, &r.name, &r.email, &r.nickName, &r.prospect, &r.address, &r.zip, &r.city, &r.notes)
+		err = rows.Scan(&r.ID, &r.Name, &r.Email, &r.NickName, &r.Prospect, &r.Address, &r.Zip, &r.City, &r.Notes)
 		checkErr(err)
 		lMembers = append(lMembers, r)
 	}
@@ -71,15 +71,15 @@ func GetMembers() MemberList {
 
 // UpdMember -- Update or add a single member
 func UpdMember(mb Member) int {
-	id := mb.id
+	id := mb.ID
 	if !dbOpen {
 		DB = OpenDB()
 	}
 	if id > 0 {
-		_, err := DB.Exec(sqlMemberSave, mb.name, mb.email, mb.nickName, mb.prospect, mb.address, mb.zip, mb.city, mb.notes, mb.id)
+		_, err := DB.Exec(sqlMemberSave, mb.Name, mb.Email, mb.NickName, mb.Prospect, mb.Address, mb.Zip, mb.City, mb.Notes, mb.ID)
 		checkErr(err)
 	} else {
-		err := DB.QueryRow(sqlMemberAdd, mb.name, mb.email, mb.nickName, mb.prospect, mb.address, mb.zip, mb.city, mb.notes).Scan(&id)
+		err := DB.QueryRow(sqlMemberAdd, mb.Name, mb.Email, mb.NickName, mb.Prospect, mb.Address, mb.Zip, mb.City, mb.Notes).Scan(&id)
 		checkErr(err)
 	}
 	return id

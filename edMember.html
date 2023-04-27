@@ -1,39 +1,39 @@
    {{template "head"}}
     <body>
-        {{if (gt .id 0)}}
+        {{if (gt .ID 0)}}
             {{template "title" "Edit Member"}}
         {{else}}
             {{template "title" "Add new Member"}}
         {{end}}
-        <form action="/savemember/{{.id}}" target="_self" method="POST">
+        <form action="/savemember/{{.ID}}" target="_self" method="POST">
             <table>
                 <tr>
                     <td><label for="iName">Name:</label></td>
-                    <td><input type="text" id="iName" name="iName" size="50" value="{{.name}}"/></td>
+                    <td><input type="text" id="iName" name="iName" size="50" value="{{.Name}}"/></td>
                 </tr>
                 <tr>
                     <td><label for="iNickName">Nick Name:</label></td>
-                    <td><input type="text" id="iNickName" name="iNickName" size="50" value="{{.nickName}}"/></td>
+                    <td><input type="text" id="iNickName" name="iNickName" size="50" value="{{.NickName}}"/></td>
                 </tr>
                 <tr>
                     <td><label for="iEmail">Email:</label></td>
-                    <td><input type="text" id="iEmail" name="iEmail" size="50" value="{{.email}}"/></td>
+                    <td><input type="text" id="iEmail" name="iEmail" size="50" value="{{.Email}}"/></td>
                 </tr>
                 <tr>
                     <td><label for="iAdress">Adress:</label></td>
-                    <td><input type="text" id="iAdress" name="iAdress" size="50" value="{{.adress}}"/></td>
+                    <td><input type="text" id="iAdress" name="iAdress" size="50" value="{{.Adress}}"/></td>
                 </tr>
                 <tr>
                     <td><label for="iCity">City:</label></td>
-                    <td><input type="text" id="iCity" name="iCity" size="50" value="{{.city}}"/></td>
+                    <td><input type="text" id="iCity" name="iCity" size="50" value="{{.City}}"/></td>
                 </tr>
                 <tr>
                     <td><label for="iZip">Zip Code:</label></td>
-                    <td><input type="text" id="iZip" name="iZip" size="8" value="{{.zip}}"/></td>
+                    <td><input type="text" id="iZip" name="iZip" size="8" value="{{.Zip}}"/></td>
                 </tr>
                 <tr>
                     <td><label for="iNotes">Notes:</label></td>
-                    <td><textarea id="iNotes" name="iNotes" rows="4" cols=50>{{printf "%s" .notes}}</textarea></td>
+                    <td><textarea id="iNotes" name="iNotes" rows="4" cols=50>{{printf "%s" .Notes}}</textarea></td>
                 </tr>
             </table>
             <br/>
