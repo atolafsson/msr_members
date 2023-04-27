@@ -50,6 +50,7 @@ func main() {
 			if terr == nil {
 				TMPLAll.New("ed_title.html").ParseFiles("ed_title.html")
 				TMPLAll.New("edMember.html").ParseFiles("edMember.html")
+				router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
 			}
 
 			log.Println("Starting, listening to port " + port)
