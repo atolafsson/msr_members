@@ -88,6 +88,12 @@ func PrintUIHeader(w http.ResponseWriter, header string) {
 	fmt.Fprintf(w, "<br />")
 }
 
+// GetMemberHref - get the link to edit staff member
+func GetMemberHref(id int) string {
+	var ref = fmt.Sprintf("<a href='/editmember/%d'>Edit %d</a>", id, id)
+	return ref
+}
+
 func Index(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, `<html><body><center><h1><b style='font-size:40px;color: #B9290A;text-shadow: 2px 2px 5px red;'>
 	Welcome to the MSR Members directory</b></h1></body></html>`)
@@ -103,8 +109,8 @@ func Members(w http.ResponseWriter, r *http.Request) {
 		"ID", "Name", "NickName", "Email", "Address", "City", "Zip Code")
 	memb := GetMembers()
 	for _, o := range memb {
-		fmt.Fprintf(w, "<tr><td>%d</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%d</td></tr>",
-			o.ID, o.Name, o.NickName, o.Email, o.Address, o.City, o.Zip)
+		fmt.Fprintf(w, "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%d</td></tr>",
+			GetMemberHref(o.ID), o.Name, o.NickName, o.Email, o.Address, o.City, o.Zip)
 	}
 	fmt.Fprint(w, "</center></body></html>")
 
@@ -143,7 +149,7 @@ func EditMember(w http.ResponseWriter, r *http.Request) {
 		mb.Prospect = 0
 		mb.Zip = 0
 	}
-	tmpl := template.Must(template.ParseFiles("edMember.html"))
+	tmpl := template.Must(template.ParseFiles("./static/edMember.html"))
 	fmt.Printf("Execute Template for %s\n", mb.Name)
 	tmpl.Execute(w, mb)
 	//TMPLAll.ExecuteTemplate(w, "edMember.html", mb)
@@ -160,7 +166,7 @@ func SaveMember(w http.ResponseWriter, r *http.Request) {
 	m.ID = mID
 	m.Name = r.FormValue("iName")
 	m.NickName = r.FormValue("iNickName")
-	m.Address = r.FormValue("iAdress")
+	m.Address = r.FormValue("iAddress")
 	m.Zip, _ = strconv.Atoi(r.FormValue("iZip"))
 	m.City = r.FormValue("iCity")
 	m.Email = r.FormValue("iEmail")

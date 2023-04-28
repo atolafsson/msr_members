@@ -11,11 +11,12 @@ var DB *sql.DB
 var dbOpen = false
 
 const (
+	sqlPrepare    = `CREATE TABLE IF NOT EXISTS members (Id INTEGER NOT NULL PRIMARY KEY, Name TEXT NOT NULL, Email TEXT, NickName TEXT, Prospect INTEGER, Notes TEXT, Address TEXT, Zip NUMERIC, City TEXT)`
 	sqlMembers    = `SELECT Id, Name, Email, NickName, Prospect, Address, Zip, City, Notes FROM members`
 	sqlMembersS   = `SELECT Name, Email, NickName FROM members`
 	sqlGetMember  = `SELECT Id, Name, Email, NickName, Prospect, Address, Zip, City, Notes FROM members WHERE id = ?`
 	sqlMemberSave = `UPDATE members set Name=?, Email=?, NickName=?, Prospect=?, Address=?, Zip=?, City=?, Notes=? where id=?`
-	sqlMemberAdd  = `INSERT into members (Name, Email, NickName, Prospect, Address, Zip, City, Notes) values (?,?,?,?,?,?,?,?,?) RETURNING id`
+	sqlMemberAdd  = `INSERT into members (Name, Email, NickName, Prospect, Address, Zip, City, Notes) values (?,?,?,?,?,?,?,?) RETURNING id`
 )
 
 func checkErr(err error) {
@@ -31,6 +32,8 @@ func OpenDB() *sql.DB {
 	db, err := sql.Open("sqlite3", sqlInfo)
 	checkErr(err)
 	err = db.Ping()
+	checkErr(err)
+	_, err = db.Exec(sqlPrepare)
 	checkErr(err)
 	log.Println("DB is now Open")
 	dbOpen = true

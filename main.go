@@ -1,17 +1,9 @@
 package main
 
 import (
-	"html/template"
 	"log"
 	"net/http"
-	"os"
-	"strings"
-
-	"github.com/creamdog/gonfig"
 )
-
-// TMPLAll -- for all html templates
-var TMPLAll *template.Template
 
 // DBConnection -- The database connection
 var DBConnection string
@@ -22,7 +14,7 @@ var SessionTimeout int
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lmicroseconds)
 
-	if len(os.Args) != 3 {
+	/*if len(os.Args) != 3 {
 		log.Println("Usage__: " + os.Args[0] + " [full path to configfile] [environment (prod|dev|test)]")
 		log.Println("Example: " + os.Args[0] + " /etc/grooming.json prod")
 	} else {
@@ -42,22 +34,19 @@ func main() {
 			DBConnection = "/Users/user/work/go/src/msr_members/sqlite3msr.db"
 			port, _ := config.GetString(cEnv+"/Port", "8084")
 			port = ":" + port
-			SessionTimeout, _ = config.GetInt(cEnv+"/SessionTimeout", 16)
-			log.Printf("Port=%s, SessionTimeout=%d, DB=%s\n", port, SessionTimeout, DBConnection)
-			router := NewRouter()
-			var terr error
-			TMPLAll, terr = template.New("ed_head.html").ParseFiles("ed_head.html")
-			if terr == nil {
-				TMPLAll.New("ed_title.html").ParseFiles("ed_title.html")
-				TMPLAll.New("edMember.html").ParseFiles("edMember.html")
-				router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
-			}
+			SessionTimeout, _ = config.GetInt(cEnv+"/SessionTimeout", 16)*/
+	port := ":8084"
+	SessionTimeout = 10
+	DBConnection = "./sqlite3msr.db"
+	log.Printf("Port=%s, SessionTimeout=%d, DB=%s\n", port, SessionTimeout, DBConnection)
+	router := NewRouter()
+	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
 
-			log.Println("Starting, listening to port " + port)
-			log.Fatal(http.ListenAndServe(port, router))
+	log.Println("Starting, listening to port " + port)
+	log.Fatal(http.ListenAndServe(port, router))
 
-		} else {
+	/*} else {
 			log.Println("Config issue, Usage__: " + os.Args[0] + " [full path to configfile] [environment (prod|dev|test)]")
 		}
-	}
+	}*/
 }
