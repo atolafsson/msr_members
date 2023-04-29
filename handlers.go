@@ -149,10 +149,43 @@ func EditMember(w http.ResponseWriter, r *http.Request) {
 		mb.Prospect = 0
 		mb.Zip = 0
 	}
-	tmpl := template.Must(template.ParseFiles("./static/edMember.html"))
+	tmpl := template.Must(template.New("test").Parse(`
+	<html>
+    <link rel='stylesheet' type='text/css' href='/static/index.css'>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <body><form action="/savemember/{{.ID}}" target="_self" method="POST"><table>
+    <tr><td></td>
+                    <td>{{if (gt .ID 0)}}
+                            <b style='font-size:30px;color: #B9290A;text-shadow: 2px 2px 5px red;'>Edit a Member</b>
+                        {{else}}
+                            <b style='font-size:30px;color: #B9290A;text-shadow: 2px 2px 5px red;'>Add a new Member</b>
+                        {{end}}</td>
+                </tr><tr>
+                    <td><label for="iName">Name:</label></td>
+                    <td><input type="text" id="iName" name="iName" size="64" value="{{.Name}}"/></td>
+                </tr><tr>
+                    <td><label for="iNickName">Nick Name:</label></td>
+                    <td><input type="text" id="iNickName" name="iNickName" size="50" value="{{.NickName}}"/></td>
+                </tr><tr>
+                    <td><label for="iEmail">Email:</label></td>
+                    <td><input type="text" id="iEmail" name="iEmail" size="64" value="{{.Email}}"/></td>
+                </tr><tr>
+                    <td><label for="iAddress">Address:</label></td>
+                    <td><input type="text" id="iAddress" name="iAddress" size="64" value="{{.Address}}"/></td>
+                </tr><tr>
+                    <td><label for="iCity">City:</label></td>
+                    <td><input type="text" id="iCity" name="iCity" size="50" value="{{.City}}"/></td>
+                </tr><tr>
+                    <td><label for="iZip">Zip Code:</label></td>
+                    <td><input type="number" id="iZip" name="iZip" size="8" value="{{.Zip}}"/></td>
+                </tr><tr>
+                    <td><label for="iNotes">Notes:</label></td>
+                    <td><textarea id="iNotes" name="iNotes" rows="4" cols=64>{{printf "%s" .Notes}}</textarea></td>
+                </tr></table><br/>
+            <div><input type="submit" class="gbutton" value="Save"></div>
+        </form></body></html>`))
 	fmt.Printf("Execute Template for %s\n", mb.Name)
 	tmpl.Execute(w, mb)
-	//TMPLAll.ExecuteTemplate(w, "edMember.html", mb)
 }
 
 // SaveMember -- Save Member
