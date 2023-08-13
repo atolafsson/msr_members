@@ -1,12 +1,24 @@
 <html>
     <link rel='stylesheet' type='text/css' href='/static/index.css'>
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <style>
+table, th, td {
+  border:1px solid black;
+  border-collapse: collapse;
+}
+td.normal {
+    width: 15%;
+}
+td.large {
+    colspan: 2;
+}
+</style>
     <body>
         <form action="/savemember/{{.ID}}" target="_self" method="POST">
             <table>
                 <tr>
                     <td></td>
-                    <td>
+                    <td colspan="3">
                         {{if (gt .ID 0)}}
                             <b style='font-size:30px;color: #B9290A;text-shadow: 2px 2px 5px red;'>Edit a Member</b>
                         {{else}}
@@ -15,32 +27,49 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><label for="iName">Name:</label></td>
-                    <td><input type="text" id="iName" name="iName" size="64" value="{{.Name}}"/></td>
+                    <td class="normal"><label for="iName">Name:</label></td>
+                    <td class="large"><input type="text" id="iName" name="iName" size="64" value="{{.Name}}"/></td>
                 </tr>
                 <tr>
-                    <td><label for="iNickName">Nick Name:</label></td>
-                    <td><input type="text" id="iNickName" name="iNickName" size="50" value="{{.NickName}}"/></td>
+                    <td class="normal"><label for="Rank">Rank:</label></td>
+                    <td class="normal"><input type="number" id="iRank" name="iRank" size="4" value="{{.Rank}}"/></td>
+                    <td class="normal"><label for="Since">Year:</label></td>
+                    <td class="normal"><input type="text" id="iSince" name="iSince" size="10" value="{{.Since}}"/></td>
                 </tr>
                 <tr>
-                    <td><label for="iEmail">Email:</label></td>
-                    <td><input type="text" id="iEmail" name="iEmail" size="64" value="{{.Email}}"/></td>
+                    <td><label for="iPhone">Phone:</label></td>
+                    <td><input type="text" id="iPhone" name="iPhone" size="12" value="{{.Phone}}"/></td>
                 </tr>
                 <tr>
                     <td><label for="iAddress">Address:</label></td>
-                    <td><input type="text" id="iAddress" name="iAddress" size="64" value="{{.Address}}"/></td>
+                    <td colspan="2"><input type="text" id="iAddress" name="iAddress" size="64" value="{{.Address}}"/></td>
                 </tr>
                 <tr>
                     <td><label for="iCity">City:</label></td>
-                    <td><input type="text" id="iCity" name="iCity" size="50" value="{{.City}}"/></td>
+                    <td colspan="2"><input type="text" id="iCity" name="iCity" size="50" value="{{.City}}"/></td>
+                </tr>
+                <tr>
+                    <td><label for="iState">State:</label></td>
+                    <td><input type="text" id="iState" name="iState" size="3" value="{{.State}}"/></td>
                 </tr>
                 <tr>
                     <td><label for="iZip">Zip Code:</label></td>
                     <td><input type="number" id="iZip" name="iZip" size="8" value="{{.Zip}}"/></td>
                 </tr>
                 <tr>
+                    <td><label for="iEmail">Email:</label></td>
+                    <td colspan="2"><input type="text" id="iEmail" name="iEmail" size="50" value="{{.Email}}"/></td>
+                </tr>
+                <tr>
+                    <td><label for="Birthday">Birthday:</label></td>
+                    <td><input type="text" id="iBirthday" name="iBirthday" size="10" value="{{.Birthday}}"/></td>
+                    <td><label for="Status">&nbsp;&nbsp;Status:</label></td>
+                    <td><input type="number" id="iStatus" name="iStatus" size="2" value="{{.Status}}"/></td>
+                    <td><label>&nbsp;&nbsp;0=Member, 1=Prospect, 2=On Leave</label></td>
+                </tr>
+                <tr>
                     <td><label for="iNotes">Notes:</label></td>
-                    <td><textarea id="iNotes" name="iNotes" rows="4" cols=64>{{printf "%s" .Notes}}</textarea></td>
+                    <td colspan="2"><textarea id="iNotes" name="iNotes" rows="4" cols=50>{{printf "%s" .Notes}}</textarea></td>
                 </tr>
             </table>
             <br/>

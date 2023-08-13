@@ -69,4 +69,16 @@ var routes = Routes{
 		"/savemember/{memberId}",
 		SaveMember,
 	},
+	Route{
+		"Login",
+		"POST",
+		"/login",
+		Login,
+	},
+	Route{
+		"NotAdminUser",
+		"GET",
+		"/notadminuser",
+		NotAdminUser,
+	},
 }
