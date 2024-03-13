@@ -11,14 +11,20 @@ var DB *sql.DB
 var dbOpen = false
 
 const (
-	sqlPrepare    = `CREATE TABLE IF NOT EXISTS members (Id INTEGER NOT NULL PRIMARY KEY, Name TEXT NOT NULL, Email TEXT, NickName TEXT, Prospect INTEGER, Notes TEXT, Address TEXT, Zip NUMERIC, City TEXT)`
-	sqlMembers    = `SELECT Id, Name, Email, NickName, Prospect, Address, Zip, City, Notes FROM members`
-	sqlMembersS   = `SELECT Name, Email, NickName FROM members`
-	sqlGetMember  = `SELECT Id, Name, Email, NickName, Prospect, Address, Zip, City, Notes FROM members WHERE id = ?`
-	sqlMemberSave = `UPDATE members set Name=?, Email=?, NickName=?, Prospect=?, Address=?, Zip=?, City=?, Notes=? where id=?`
-	sqlMemberAdd  = `INSERT into members (Name, Email, NickName, Prospect, Address, Zip, City, Notes) values (?,?,?,?,?,?,?,?) RETURNING id`
+	sqlPrepare    = `CREATE TABLE IF NOT EXISTS members (Id INTEGER NOT NULL PRIMARY KEY, Rank INTEGER, Name TEXT NOT NULL, Since Text, Phone TEXT, Address TEXT, City TEXT, State TEXT, Zip NUMERIC, Email TEXT, BirthDay TEXT, Notes TEXT, Status INTEGER)`
+	sqlMembers    = `SELECT Id, Name, Rank, Since, Phone, Address, City, State, Zip, Email, BirthDay, Status, Notes FROM members`
+	sqlMembersS   = `SELECT Name, Email, Phone FROM members`
+	sqlGetMember  = `SELECT Id, Name, Rank, Since, Phone, Address, City, State, Zip, Email, BirthDay, Status, Notes  FROM members WHERE id = ?`
+	sqlMemberSave = `UPDATE members set Name=?, Rank=?, Since=?, Phone=?, Address=?, City=?, State=?, Zip=?, Email=?, BirthDay=?, Status=?, Notes=? where id=?`
+	sqlMemberAdd  = `INSERT into members (Name, Rank, Since, Phone, Address, City, State, Zip, Email, BirthDay, Status, Notes) values (?,?,?,?,?,?,?,?,?,?,?,?) RETURNING id`
+	sqlLogin      = `select utype from users where name=$1 and pwd=$2;`
 )
 
+/*
+CREATE TABLE users (name text, pwd text, utype int);
+insert into users values("guest","43265a3c6387a820b59e14069089be46",1);
+insert into users values("admin","f61ba84b037fd8015a74a8ad30d2f270",9);
+*/
 func checkErr(err error) {
 	if err != nil {
 		panic(err)
@@ -46,7 +52,7 @@ func GetMember(mid int) Member {
 		DB = OpenDB()
 	}
 	row := DB.QueryRow(sqlGetMember, mid)
-	err := row.Scan(&r.ID, &r.Name, &r.Email, &r.NickName, &r.Prospect, &r.Address, &r.Zip, &r.City, &r.Notes)
+	err := row.Scan(&r.ID, &r.Name, &r.Rank, &r.Since, &r.Phone, &r.Address, &r.City, &r.State, &r.Zip, &r.Email, &r.BirthDay, &r.Status, &r.Notes)
 	checkErr(err)
 	return r
 }
@@ -65,7 +71,7 @@ func GetMembers() MemberList {
 	log.Println("populate the data")
 	for rows.Next() {
 		var r Member
-		err = rows.Scan(&r.ID, &r.Name, &r.Email, &r.NickName, &r.Prospect, &r.Address, &r.Zip, &r.City, &r.Notes)
+		err = rows.Scan(&r.ID, &r.Name, &r.Rank, &r.Since, &r.Phone, &r.Address, &r.City, &r.State, &r.Zip, &r.Email, &r.BirthDay, &r.Status, &r.Notes)
 		checkErr(err)
 		lMembers = append(lMembers, r)
 	}
@@ -79,10 +85,12 @@ func UpdMember(mb Member) int {
 		DB = OpenDB()
 	}
 	if id > 0 {
-		_, err := DB.Exec(sqlMemberSave, mb.Name, mb.Email, mb.NickName, mb.Prospect, mb.Address, mb.Zip, mb.City, mb.Notes, mb.ID)
+		log.Println("DB Query=" + sqlMemberSave)
+		log.Printf("%s,%d,%s,%s,%s,%s,%s,%d,%s,%s,%d,%s,%d", mb.Name, mb.Rank, mb.Since, mb.Phone, mb.Address, mb.City, mb.State, mb.Zip, mb.Email, mb.BirthDay, mb.Status, mb.Notes, mb.ID)
+		_, err := DB.Exec(sqlMemberSave, mb.Name, mb.Rank, mb.Since, mb.Phone, mb.Address, mb.City, mb.State, mb.Zip, mb.Email, mb.BirthDay, mb.Status, mb.Notes, mb.ID)
 		checkErr(err)
 	} else {
-		err := DB.QueryRow(sqlMemberAdd, mb.Name, mb.Email, mb.NickName, mb.Prospect, mb.Address, mb.Zip, mb.City, mb.Notes).Scan(&id)
+		err := DB.QueryRow(sqlMemberAdd, mb.Name, mb.Rank, mb.Since, mb.Phone, mb.Address, mb.City, mb.State, mb.Zip, mb.Email, mb.BirthDay, mb.Status, mb.Notes).Scan(&id)
 		checkErr(err)
 	}
 	return id
@@ -100,9 +108,28 @@ func GetMembersS() MemberSList {
 	log.Println("populate the data")
 	for rows.Next() {
 		var r MemberS
-		err = rows.Scan(&r.name, &r.email, &r.nickName)
+		err = rows.Scan(&r.Name, &r.Email, &r.Phone)
 		checkErr(err)
 		lMembers = append(lMembers, r)
 	}
 	return lMembers
+}
+
+// LoginUser Check if the user can be authenticated
+func LoginUser(uname string, pwd string) int {
+	var utype int
+	if !dbOpen {
+		DB = OpenDB()
+	}
+	log.Printf("Login, uname=%s, pwd=%s, Qry=%s", uname, pwd, sqlLogin)
+	row := DB.QueryRow(sqlLogin, uname, pwd)
+	switch err := row.Scan(&utype); err {
+	case sql.ErrNoRows:
+		utype = 0
+	case nil:
+		// We got all we need
+	default:
+		panic(err)
+	}
+	return utype
 }

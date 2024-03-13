@@ -3,21 +3,25 @@ package main
 type Member struct {
 	ID       int
 	Name     string
-	Email    string
-	NickName string
-	Prospect int
+	Rank     int
+	Since    string
+	Phone    string
 	Address  string
-	Zip      int
 	City     string
+	State    string
+	Zip      int
+	Email    string
+	BirthDay string
 	Notes    string
+	Status   int
 }
 
 type MemberList []Member
 
 type MemberS struct {
-	name     string
-	email    string
-	nickName string
+	Name  string
+	Email string
+	Phone string
 }
 
 type MemberSList []MemberS

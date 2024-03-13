@@ -1,0 +1,26 @@
+<html>
+    <link rel='stylesheet' type='text/css' href='/static/index.css'>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <body>
+        <center><h1><b style='font-size:40px;color: #B9290A;text-shadow: 2px 2px 5px red;'>Login to MSR Management</b></h1>
+	    <p><img src="/static/MSR.jpeg" alt="MSR" style="height:240px;">
+        <br/><br/>
+
+        <form action="/login" target="_self" method="POST">
+            <table>
+                <tr></tr><tr></tr>
+				<tr>
+					<td><label for="Username">Username:</label></td>
+					<td><input type="text" id="Username" name="Username" size="30" value=""></select></td>
+				</tr>
+				<tr>
+					<td><label for="Password">Password:</label></td>
+					<td><input type="text" id="Password" name="Password" size="30" value=""></select></td>
+				</tr>
+            </table>
+            <br/>
+            <div><input type="submit" class="gbutton" value="Login"></div>
+        </form>
+        </center>
+    </body>
+</html>
