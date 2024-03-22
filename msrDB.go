@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"log"
+	"os"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -11,7 +12,10 @@ var DB *sql.DB
 var dbOpen = false
 
 const (
-	sqlPrepare    = `CREATE TABLE IF NOT EXISTS members (Id INTEGER NOT NULL PRIMARY KEY, Rank INTEGER, Name TEXT NOT NULL, Since Text, Phone TEXT, Address TEXT, City TEXT, State TEXT, Zip NUMERIC, Email TEXT, BirthDay TEXT, Notes TEXT, Status INTEGER)`
+	sqlCreate     = `CREATE DATABASE IF NOT EXISTS msr`
+	sqlPrepareM   = `CREATE TABLE IF NOT EXISTS members (Id INTEGER NOT NULL PRIMARY KEY, Rank INTEGER, Name TEXT NOT NULL, Since Text, Phone TEXT, Address TEXT, City TEXT, State TEXT, Zip NUMERIC, Email TEXT, BirthDay TEXT, Notes TEXT, Status INTEGER)`
+	sqlPrepareU   = `CREATE TABLE IF NOT EXISTS users (name text, pwd text, utype int)`
+	sqlCheckAdmin = `INSERT INTO users(name, pwd, utype) SELECT 'admin', '38b33779833838a98c2a241ce465fb07', 9 WHERE NOT EXISTS(SELECT 1 FROM users WHERE name='admin')`
 	sqlMembers    = `SELECT Id, Name, Rank, Since, Phone, Address, City, State, Zip, Email, BirthDay, Status, Notes FROM members`
 	sqlMembersS   = `SELECT Name, Email, Phone FROM members`
 	sqlGetMember  = `SELECT Id, Name, Rank, Since, Phone, Address, City, State, Zip, Email, BirthDay, Status, Notes  FROM members WHERE id = ?`
@@ -21,9 +25,10 @@ const (
 )
 
 /*
-CREATE TABLE users (name text, pwd text, utype int);
-insert into users values("guest","43265a3c6387a820b59e14069089be46",1);
-insert into users values("admin","f61ba84b037fd8015a74a8ad30d2f270",9);
+CREATE TABLE IF NOT EXISTS users (name text, pwd text, utype int);
+insert into users values("guest","084e0343a0486ff05530df6c705c8bb4",1); //guest/guest
+insert into users values("admin","38b33779833838a98c2a241ce465fb07",9); //admin/msr
+insert into users values("atli","dd5c23567c8efc1c267566d600de1a49",9); //atli/atli
 */
 func checkErr(err error) {
 	if err != nil {
@@ -33,14 +38,26 @@ func checkErr(err error) {
 
 // OpenDB : Open the Grooming database
 func OpenDB() *sql.DB {
-	sqlInfo := DBConnection
-	log.Println("Open database sqlite3, " + sqlInfo)
-	db, err := sql.Open("sqlite3", sqlInfo)
+	log.Println("Create dir " + DBDir)
+	err := os.Mkdir(DBDir, 0777)
+	if err != nil {
+		log.Printf("Error %s creating %s", err.Error(), DBDir)
+	}
+	log.Println("Open database sqlite3, " + DBConnection)
+	db, err := sql.Open("sqlite3", DBConnection)
 	checkErr(err)
 	err = db.Ping()
 	checkErr(err)
-	_, err = db.Exec(sqlPrepare)
+	log.Println("Create member table")
+	_, err = db.Exec(sqlPrepareM)
 	checkErr(err)
+	log.Println("Create user table")
+	_, err = db.Exec(sqlPrepareU)
+	checkErr(err)
+	log.Println("Insert admin user")
+	_, err = db.Exec(sqlCheckAdmin)
+	checkErr(err)
+
 	log.Println("DB is now Open")
 	dbOpen = true
 	return db

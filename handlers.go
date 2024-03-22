@@ -144,14 +144,13 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, `<html><body><center><h1><b style='font-size:40px;color: #B9290A;text-shadow: 2px 2px 5px red;'>
 	Welcome to the MSR Members directory</b></h1></body></html>`)
 	//fmt.Fprint(w, `<p><img src="/static/Notebook.jpg" alt="Members" style="height:240px;">`)
-	fmt.Fprint(w, `<p><img src="/static/MSR.JPEG" alt="MSR" style="height:325px;">`)
+	fmt.Fprint(w, `<p><img src="/static/MSR.jpeg" alt="MSR" style="height:325px;">`)
 	fmt.Fprint(w, "<p><a href='/members'>Manage Members</a></p>")
 }
 
 func Members(w http.ResponseWriter, r *http.Request) {
 	PrintFilterHeader(w, "MSR Current Members", "[[1,0]]", false)
-	fmt.Fprintf(w, "&nbsp;&nbsp;&nbsp;&nbsp;")
-	fmt.Fprintf(w, "Click here to <a href='/editmember/0'>Add new Member</a></center></div>")
+	fmt.Fprintf(w, "<center>Click here to <a href='/editmember/0'>Add new Member</a></center></div>")
 	fmt.Fprintf(w, "<thead><tr><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>",
 		"ID", "Name", "Rank", "Year", "Phone", "Address", "City", "State", "Zip Code", "Email", "Birth Day", "Status")
 	memb := GetMembers()
