@@ -21,6 +21,7 @@ const (
   <div class="dropdown-content">
   <a href="/">Home</a>
   <a href="/members">Members</a>
+  <a href="/static/login.html">Login</a>
   </div>
   <b style='vertical-align: bottom;font-size:30px;color: #B9290A;text-shadow: 2px 2px 5px red;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%s</b>
 </div>
@@ -137,7 +138,9 @@ func NotAllowed(w http.ResponseWriter, r *http.Request) {
 func NotAdminUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, `<html><body><center><h1><b style='font-size:40px;color: #B9290A;text-shadow: 2px 2px 5px red;'>
 	MSR Members</b></h1>
-	<p>Not allowed</p><p>You need to be Admin user to get access</p></body></html>`)
+	<p>Not allowed</p><p>You need to be Admin user to be able to add or modify members.</p>
+	<p><a href='/members'>Back to Members</a></p>
+	</body></html>`)
 }
 
 func Index(w http.ResponseWriter, r *http.Request) {
