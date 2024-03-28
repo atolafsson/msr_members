@@ -83,15 +83,19 @@ func GetMember(mid int) Member {
 	return r
 }
 
-func GetMembers() MemberList {
+func GetMembers(uType string) MemberList {
 	var lMembers MemberList
 	if !dbOpen {
 		DB = OpenDB()
 	}
 	//ins, _ := DB.Prepare("INSERT  into members (Name, Email, NickName, Prospect, Notes, Address, Zip, City) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
 	//ins.Exec("Halldor", "aatlason@gmail.com", "Axel", 0, "", "201 Countryside Ln", 38040, "Halls")
-	log.Println("DB Query=" + sqlMembers)
-	rows, err := DB.Query(sqlMembers)
+	sqlM := sqlMembers
+	if uType == "active" {
+		sqlM = sqlM + " where status < 2"
+	}
+	log.Println("DB Query=" + sqlM)
+	rows, err := DB.Query(sqlM)
 	checkErr(err)
 	defer rows.Close()
 	log.Println("populate the data")

@@ -48,7 +48,7 @@ var routes = Routes{
 	{
 		"Members",
 		"GET",
-		"/members",
+		"/members/{userType}",
 		Members,
 	},
 	{
