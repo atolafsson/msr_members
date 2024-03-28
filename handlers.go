@@ -22,7 +22,7 @@ const (
   <div class="dropdown-content">
   <a href="/">Home</a>
   <a href="/members/all">Members</a>
-  <a href="/static/login.html">Login</a>
+  <a href="/static/Login.html">Login</a>
   </div>
   <b style='vertical-align: bottom;font-size:30px;color: #B9290A;text-shadow: 2px 2px 5px red;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%s</b>
 </div>
